@@ -48,13 +48,13 @@ void dijkstra(vector<vector<int>>& graph, int source) {
         }
     }
     
-    // Print shortest distances and paths 
+    // Print shortest time and paths 
     for (int vertex = 0; vertex < numVertices; vertex++) {
         // skip source vertex
         if (source == vertex)
             continue;
-        //print shortest distance
-        cout << "Shortest distance from " << source << " to " << vertex << " = " << dist[vertex] << endl;
+        //print shortest time
+        cout << "Shortest time from " << source << " to " << vertex << " = " << dist[vertex] << endl;
         
         //print path
         cout << "Shortest path: ";
