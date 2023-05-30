@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+#include <stack>
+
+using namespace std;
+
+//create dijkstra algorithm
+void dijkstra(vector<vector<int>>& graph, int source) {
+    int numVertices = graph.size();
+
+    // Initialize distance  with maximum values 
+    vector<int> dist(numVertices, INT_MAX);
+    // set distance of source to 0
+    dist[source] = 0;
+
+    // create and initialize prev array to track the previous vertices 
+    vector<int> prev(numVertices, -1);
+
+    // Create a priority queue to store vertices based on their distance from the source
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    
+    pq.push({0, source});
+
+    while (!pq.empty()) {
+        int currVertex = pq.top().second;
+        int currDist = pq.top().first;
+        pq.pop();
+
+        // Skip if the current distance is already greater than the previous shortest distance
+        if (currDist > dist[currVertex])
+            continue;
+        
+        // Explore neighbors of the current vertex
+        for (int neighbor = 0; neighbor < numVertices; neighbor++) {
+            int weight = graph[currVertex][neighbor];
+            if (weight != 0) {
+                int newDist = currDist + weight;
+
+                // Update the distance and previous vertex if a shorter path is found
+                if (newDist < dist[neighbor]) {
+                    dist[neighbor] = newDist;
+                    prev[neighbor] = currVertex;
+                    pq.push({newDist, neighbor});
+                }
+            }
+        }
+    }
+    
+    // Print shortest distances and paths 
+    for (int vertex = 0; vertex < numVertices; vertex++) {
+        // skip source vertex
+        if (source == vertex)
+            continue;
+        //print shortest distance
+        cout << "Shortest distance from " << source << " to " << vertex << " = " << dist[vertex] << endl;
+        
+        //print path
+        cout << "Shortest path: ";
+        stack<int> path;
+        int v = vertex;
+        
+        while (v != -1) {
+            path.push(v);
+            v = prev[v];
+        }
+        while (!path.empty()) {
+            cout << path.top();
+            path.pop();
+            if (!path.empty())
+                cout << " -> ";
+        }
+        cout << endl << endl;
+    }
+}
+
+int main() {
+    //create adajaceny matrix of the graph
+    vector<vector<int>> graph = {
+        {0, 10, 0, 0, 15, 5},
+        {10, 0, 10, 30, 0, 0},
+        {0, 10, 0, 12, 5, 0},
+        {0, 30, 12, 0, 0, 20},
+        {15, 0, 5, 0, 0, 0},
+        {5, 0, 0, 20, 0, 0}
+    };
+    
+    int sourceVertex = 5; //starting vertex
+    dijkstra(graph, sourceVertex);
+
+    return 0;
+}
